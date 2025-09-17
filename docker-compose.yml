@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./customers   # location of Dockerfile
+      dockerfile: Dockerfile
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./customers:/app/customers
+    environment:
+      - DATABASE_HOST=customer-db.c7e2mi086k30.eu-north-1.rds.amazonaws.com
+      - DATABASE_NAME=customer_db
+      - DATABASE_USER=admin
+      - DATABASE_PASSWORD=!qazXsw2#45
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: customerdb
+      MYSQL_USER=customeruser
+      MYSQL_PASSWORD=secret
+    ports:
+      - "3306:3306"
