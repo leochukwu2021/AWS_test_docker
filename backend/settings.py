@@ -12,21 +12,23 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bb3cb_*np07wb%7u=bbkp*actys36-8flomq#56fp@m5j=mk2-'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['13.51.163.135','localhost', '127.0.0.1']
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', '').split(',') if host.strip()]
+print(ALLOWED_HOSTS)
 
 
 # Application definition
@@ -81,14 +83,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'customer_db',       # the DB name you set in RDS
-        'USER': 'admin',             # your RDS master username
-        'PASSWORD': '!qazXsw2#45',
-        'HOST': 'customer-db.c7e2mi086k30.eu-north-1.rds.amazonaws.com',  # RDS endpoint
-        'PORT': '3306',
+        'NAME': os.environ.get("DATABASE_NAME"),       # the DB name you set in RDS
+        'USER': os.environ.get("DATABASE_USER"),             # your RDS master username
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+        'HOST': os.environ.get("DATABASE_HOST"),  # RDS endpoint
+        'PORT': os.environ.get("DATABASE_PORT", "3306"),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
     }
 }
 
+print(os.getenv('DATABASE_NAME'))
+print(os.getenv('DATABASE_USER'))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
