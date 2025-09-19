@@ -1,28 +1,17 @@
-# Stage 1: Build React app
-FROM node:20-alpine AS build
+# Use Node image for local development
+FROM node:20
 
 WORKDIR /app
 
+# Copy only package files first to leverage caching
 COPY package.json package-lock.json ./
-
 RUN npm install
 
-
+# Copy all frontend files
 COPY . .
 
-RUN npm run build
+# Expose React dev server port
+EXPOSE 3000
 
-# Stage 2: Serve with Nginx
-FROM nginx:alpine
-
-# Copy the build output to Nginx html folder
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Copy your nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start React dev server with live reload
+CMD ["npm", "start"]

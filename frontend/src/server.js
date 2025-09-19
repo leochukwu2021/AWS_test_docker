@@ -1,8 +1,8 @@
-export const dev_server = "http://127.0.0.1:8000/api";
+export const dev_server = "http://localhost:8085/api";
 export const prod_server = "http://13.51.163.135/api";
 
-const envDevLocal = false;
-const prodBuild = true;
+const envDevLocal = true;
+const prodBuild = false;
 
 export let url;
 

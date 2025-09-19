@@ -16,6 +16,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy Django project
+COPY ../backend ./backend
 COPY . .
 
 # Collect static files
@@ -27,5 +28,5 @@ EXPOSE 8000
 # Run migrations (optional in container, could be done separately)
 # CMD ["python", "manage.py", "migrate"]
 
-# Start Gunicorn
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Start Django dev server with auto-reload
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

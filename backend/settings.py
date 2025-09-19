@@ -127,9 +127,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:3002",
     "https://d320bn1v6234ep.cloudfront.net",
+    "http://localhost:8085",
 ]
 
 # Static files (CSS, JavaScript, Images)
